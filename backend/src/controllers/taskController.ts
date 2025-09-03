@@ -1,151 +1,113 @@
-
 import type { Request, Response } from "express";
-import db from "../config/database";
-
-// Interface para tipagem da tarefa
-interface tarefa {
-  id?: number;
-  title: string;
-  description: string;
-  status: "pending" | "in_progress" | "completed";
-  created_at?: Date;
-}
-
-// Interface para query parameters
-interface TarefaQuery {
-  status?: string;
-}
+import * as tarefaService from "../services/taskService";
+import type { TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/interfaces";
 
 // Buscar todas as tarefas
-export const getAllTarefas = (
+export const getAllTarefas = async (
   req: Request<{}, any, any, TarefaQuery>,
   res: Response
-): void => {
-  const { status } = req.query;
-  let query = "SELECT * FROM tarefas";
-
-  if (status) {
-    query += ` WHERE status = '${status}'`;
+): Promise<void> => {
+  try {
+    const { status } = req.query;
+    const tarefas = await tarefaService.findAllTarefas({ status });
+    res.json(tarefas);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
-
-  query += " ORDER BY created_at DESC";
-
-  db.query(query, (err: any, results: tarefa[]) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(results);
-  });
 };
 
 // Buscar tarefa por ID
-export const getTarefaById = (
+export const getTarefaById = async (
   req: Request<{ id: string }>,
   res: Response
-): void => {
-  const { id } = req.params;
-  db.query(
-    "SELECT * FROM tarefas WHERE id = ?",
-    [id],
-    (err: any, results: any) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      if (results.length === 0) {
-        res.status(404).json({ message: "Tarefa não encontrada" });
-        return;
-      }
-      res.json(results[0]);
-    }
-  );
-};
-
-// Criar nova tarefa
-export const createTarefa = (
-  req: Request<{}, any, Pick<tarefa, "title" | "description">>,
-  res: Response
-): void => {
-  const { title, description } = req.body;
-  db.query(
-    "INSERT INTO tarefas (title, description) VALUES (?, ?)",
-    [title, description],
-    (err: any, results: any) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res
-        .status(201)
-        .json({ id: results.insertId, title, description, status: "pending" });
-    }
-  );
-};
-
-// Atualizar tarefa
-export const updateTarefa = (
-  req: Request<{ id: string }, any, Partial<tarefa>>,
-  res: Response
-): void => {
-  const { id } = req.params;
-  const { title, description, status } = req.body;
-  db.query(
-    "UPDATE tarefas SET title = ?, description = ?, status = ? WHERE id = ?",
-    [title, description, status, id],
-    (err: any, results: any) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      if (results.affectedRows === 0) {
-        res.status(404).json({ message: "Tarefa não encontrada" });
-        return;
-      }
-      res.json({ message: "Tarefa atualizada com sucesso" });
-    }
-  );
-};
-
-// Deletar tarefa
-export const deleteTarefa = (
-  req: Request<{ id: string }>,
-  res: Response
-): void => {
-  const { id } = req.params;
-  db.query("DELETE FROM tarefas WHERE id = ?", [id], (err: any, results: any) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    if (results.affectedRows === 0) {
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const tarefa = await tarefaService.findTarefaById(id);
+    
+    if (!tarefa) {
       res.status(404).json({ message: "Tarefa não encontrada" });
       return;
     }
+    
+    res.json(tarefa);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Criar nova tarefa
+export const createTarefa = async (
+  req: Request<{}, any, CreateTarefaDto>,
+  res: Response
+): Promise<void> => {
+  try {
+    const tarefaData = req.body;
+    const novaTarefa = await tarefaService.createTarefa(tarefaData);
+    res.status(201).json(novaTarefa);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Atualizar tarefa
+export const updateTarefa = async (
+  req: Request<{ id: string }, any, UpdateTarefaDto>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const tarefaData = req.body;
+    const atualizada = await tarefaService.updateTarefa(id, tarefaData);
+    
+    if (!atualizada) {
+      res.status(404).json({ message: "Tarefa não encontrada" });
+      return;
+    }
+    
+    res.json({ message: "Tarefa atualizada com sucesso" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Deletar tarefa
+export const deleteTarefa = async (
+  req: Request<{ id: string }>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const deletada = await tarefaService.deleteTarefa(id);
+    
+    if (!deletada) {
+      res.status(404).json({ message: "Tarefa não encontrada" });
+      return;
+    }
+    
     res.json({ message: "Tarefa deletada com sucesso" });
-  });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // Atualizar status da tarefa
-export const updateTarefaStatus = (
-  req: Request<{ id: string }, any, Pick<tarefa, "status">>,
+export const updateTarefaStatus = async (
+  req: Request<{ id: string }, any, UpdateStatusDto>,
   res: Response
-): void => {
-  const { id } = req.params;
-  const { status } = req.body;
-  db.query(
-    "UPDATE tarefas SET status = ? WHERE id = ?",
-    [status, id],
-    (err: any, results: any) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      if (results.affectedRows === 0) {
-        res.status(404).json({ message: "Tarefa não encontrada" });
-        return;
-      }
-      res.json({ message: "Status da tarefa atualizado com sucesso" });
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const statusData = req.body;
+    const atualizada = await tarefaService.updateTarefaStatus(id, statusData);
+    
+    if (!atualizada) {
+      res.status(404).json({ message: "Tarefa não encontrada" });
+      return;
     }
-  );
+    
+    res.json({ message: "Status da tarefa atualizado com sucesso" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 };

@@ -1,9 +1,9 @@
 
-import "dotenv/config"; // Para variáveis de ambiente
+import "dotenv/config";  // Para carrega as variáveis de ambiente
 import express from "express";
 import cors from "cors";
-import db from "./src/config/database";
-import taskRoutes from "./src/routes/tasks"; 
+import db from "./config/database";
+import taskRoutes from "./routes/tasks"; 
 
 const app = express();
 const PORT: number = parseInt(process.env.PORT || "5000");
