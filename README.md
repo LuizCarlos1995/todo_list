@@ -112,6 +112,15 @@ A aplicação será aberta em `http://localhost:3000`
 
 ## 📚 Documentação da API
 
+Este projeto inclui documentação interativa da API usando Swagger UI, gerada automaticamente com swagger-autogen.
+Acessando a Documentação
+Após iniciar o servidor, acesse a documentação em:
+`http://localhost:5000/api-docs`
+Como Atualizar a Documentação
+Sempre que adicionar ou modificar rotas, execute:
+bashnpm run swagger  # Gera/atualiza a documentação
+npm run dev      # Inicia o servidor
+
 ### Endpoints Disponíveis
 
 | Método | Endpoint | Descrição |
@@ -121,6 +130,9 @@ A aplicação será aberta em `http://localhost:3000`
 | `PUT` | `/api/tasks/:id` | Atualiza uma tarefa específica |
 | `DELETE` | `/api/tasks/:id` | Remove uma tarefa específica |
 | `PATCH` | `/api/tasks/:id/complete` | Marca/desmarca tarefa como concluída |
+
+Testando a API
+A interface Swagger permite testar todos os endpoints diretamente no navegador, sem necessidade de ferramentas externas como Postman.
 
 ### Exemplo de Uso
 
