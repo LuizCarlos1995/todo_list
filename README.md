@@ -35,6 +35,10 @@ Uma aplicação completa de gerenciamento de tarefas construída com tecnologias
 - **CSS3** - Estilização responsiva
 - **Axios** - Cliente HTTP para requisições à API
 
+## 🎥 Demonstração
+
+[Assista ao vídeo no YouTube](https://youtu.be/EILEyR2yvCw)
+
 ## 📋 Pré-requisitos
 
 Antes de começar, você precisa ter instalado em sua máquina:
