@@ -1,13 +1,14 @@
 export interface Task {
-  _id?: string;
-  title: string;
-  description: string;
   completed: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  id?: number;
+  titulo: string;
+  descricao: string;
+  status: 'pendente' | 'prosseguindo' | 'concluido';
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface TaskFormData {
-  title: string;
-  description: string;
+  titulo: string;
+  descricao: string;
 }

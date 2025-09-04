@@ -409,4 +409,46 @@ body {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
     }
+
+        .status-selector {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    
+        .status-selector label {
+            font-weight: 500;
+            margin-right: 0.5rem;
+            color: #495057;
+        }
+    
+        .status-dropdown {
+            padding: 0.5rem;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            background: white;
+            color: #495057;
+        }
+    
+        .status-dropdown:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+    
+        /* Cores para os status */
+        .task-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+    
+        .task-status.in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+    
+        .task-status.pending {
+            background: #f8d7da;
+            color: #721c24;
+        }
 }

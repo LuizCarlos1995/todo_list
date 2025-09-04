@@ -1,70 +1,50 @@
+import axios from 'axios';
 import { Task, TaskFormData } from '../types/Task';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
-const handleResponse = async (response: Response) => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-};
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
 
 export const taskService = {
   // Listar todas as tarefas
   getTasks: async (): Promise<Task[]> => {
-    const response = await fetch(`${API_BASE_URL}/tasks`);
-    return handleResponse(response);
+    const response = await api.get('/tasks');
+    return response.data;
   },
 
   // Adicionar nova tarefa
   createTask: async (taskData: TaskFormData): Promise<Task> => {
-    const response = await fetch(`${API_BASE_URL}/tasks`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(taskData),
+    const response = await api.post('/tasks', {
+      ...taskData,
+      status: 'pendente' // Status padrão para novas tarefas
     });
-    return handleResponse(response);
+    return response.data;
   },
 
   // Editar tarefa
-  updateTask: async (id: string, taskData: Partial<Task>): Promise<Task> => {
-    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(taskData),
-    });
-    return handleResponse(response);
+  updateTask: async (id: number, taskData: Partial<Task>): Promise<Task> => {
+    const response = await api.put(`/tasks/${id}`, taskData);
+    return response.data;
   },
 
   // Excluir tarefa
-  deleteTask: async (id: string): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  deleteTask: async (id: number): Promise<void> => {
+    await api.delete(`/tasks/${id}`);
   },
 
   // Marcar como concluída
-  completeTask: async (id: string): Promise<Task> => {
-    const response = await fetch(`${API_BASE_URL}/tasks/${id}/status`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ completed: true }),
+  completeTask: async (id: number): Promise<Task> => {
+    const response = await api.patch(`/tasks/${id}`, { 
+      status: 'concluido' 
     });
-    return handleResponse(response);
+    return response.data;
   },
 
   // Filtrar por status
-  filterTasksByStatus: async (completed: boolean): Promise<Task[]> => {
-    const response = await fetch(`${API_BASE_URL}/tasks?completed=${completed}`);
-    return handleResponse(response);
+  filterTasksByStatus: async (status: string): Promise<Task[]> => {
+    const response = await api.get(`/tasks?status=${status}`);
+    return response.data;
   }
 };

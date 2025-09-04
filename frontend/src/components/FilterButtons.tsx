@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface FilterButtonsProps {
-  currentFilter: 'all' | 'completed' | 'pending';
-  onFilterChange: (filter: 'all' | 'completed' | 'pending') => void;
+  currentFilter: 'all' | 'pendente' | 'prosseguindo' | 'concluido';
+  onFilterChange: (filter: 'all' | 'pendente' | 'prosseguindo' | 'concluido') => void;
 }
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({ currentFilter, onFilterChange }) => {
@@ -15,14 +15,20 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({ currentFilter, onFilterCh
         Todas
       </button>
       <button
-        onClick={() => onFilterChange('pending')}
-        className={`btn ${currentFilter === 'pending' ? 'btn-active' : 'btn-outline'}`}
+        onClick={() => onFilterChange('pendente')}
+        className={`btn ${currentFilter === 'pendente' ? 'btn-active' : 'btn-outline'}`}
       >
         Pendentes
       </button>
       <button
-        onClick={() => onFilterChange('completed')}
-        className={`btn ${currentFilter === 'completed' ? 'btn-active' : 'btn-outline'}`}
+        onClick={() => onFilterChange('prosseguindo')}
+        className={`btn ${currentFilter === 'prosseguindo' ? 'btn-active' : 'btn-outline'}`}
+      >
+        Em Progresso
+      </button>
+      <button
+        onClick={() => onFilterChange('concluido')}
+        className={`btn ${currentFilter === 'concluido' ? 'btn-active' : 'btn-outline'}`}
       >
         Concluídas
       </button>

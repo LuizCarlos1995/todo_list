@@ -9,15 +9,15 @@ interface TaskFormProps {
 
 const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, editingTask, onCancelEdit }) => {
   const [formData, setFormData] = useState<TaskFormData>({
-    title: editingTask?.title || '',
-    description: editingTask?.description || ''
+    titulo: editingTask?.titulo || '',
+    descricao: editingTask?.descricao || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.title.trim()) {
+    if (formData.titulo.trim()) {
       onSubmit(formData);
-      setFormData({ title: '', description: '' });
+      setFormData({ titulo: '', descricao: '' });
     }
   };
 
@@ -35,9 +35,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, editingTask, onCancelEdit
       <div className="form-group">
         <input
           type="text"
-          name="title"
+          name="titulo"
           placeholder="Título da tarefa"
-          value={formData.title}
+          value={formData.titulo}
           onChange={handleChange}
           required
           className="form-input"
@@ -46,9 +46,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, editingTask, onCancelEdit
 
       <div className="form-group">
         <textarea
-          name="description"
+          name="descricao"
           placeholder="Descrição (opcional)"
-          value={formData.description}
+          value={formData.descricao}
           onChange={handleChange}
           rows={3}
           className="form-textarea"

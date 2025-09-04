@@ -11,7 +11,7 @@ const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
+  const [filter, setFilter] = useState<'all' | 'pendente' | 'prosseguindo' | 'concluido'>('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,10 +40,8 @@ const App: React.FC = () => {
   const filterTasks = () => {
     let filtered = tasks;
     
-    if (filter === 'completed') {
-      filtered = tasks.filter(task => task.completed);
-    } else if (filter === 'pending') {
-      filtered = tasks.filter(task => !task.completed);
+    if (filter !== 'all') {
+      filtered = tasks.filter(task => task.status === filter);
     }
     
     setFilteredTasks(filtered);
@@ -60,41 +58,35 @@ const App: React.FC = () => {
     }
   };
 
-  const handleUpdateTask = async (taskData: TaskFormData) => {
-    if (!editingTask) return;
-
+  const handleUpdateStatus = async (id: number, status: Task['status']) => {
     try {
       setError(null);
-      const updatedTask = await taskService.updateTask(editingTask._id!, {
-        ...taskData,
-        completed: editingTask.completed
-      });
+      const updatedTask = await taskService.updateTask(id, { status });
       
       setTasks(prev => prev.map(task => 
-        task._id === editingTask._id ? updatedTask : task
+        task.id === id ? updatedTask : task
       ));
-      setEditingTask(null);
     } catch (err) {
-      setError('Erro ao atualizar tarefa');
-      console.error('Error updating task:', err);
+      setError('Erro ao atualizar status da tarefa');
+      console.error('Error updating task status:', err);
     }
   };
 
-  const handleDeleteTask = async (id: string) => {
+  const handleDeleteTask = async (id: number) => {
     try {
       setError(null);
       await taskService.deleteTask(id);
-      setTasks(prev => prev.filter(task => task._id !== id));
+      setTasks(prev => prev.filter(task => task.id !== id));
     } catch (err) {
       setError('Erro ao excluir tarefa');
       console.error('Error deleting task:', err);
     }
   };
 
-  const handleToggleComplete = async (id: string) => {
+  const handleToggleComplete = async (id: number) => {
     try {
       setError(null);
-      const task = tasks.find(t => t._id === id);
+      const task = tasks.find(t => t.id === id);
       if (!task) return;
 
       const updatedTask = await taskService.updateTask(id, {
@@ -102,13 +94,27 @@ const App: React.FC = () => {
       });
       
       setTasks(prev => prev.map(t => 
-        t._id === id ? updatedTask : t
+        t.id === id ? updatedTask : t
       ));
     } catch (err) {
       setError('Erro ao atualizar status da tarefa');
       console.error('Error toggling task completion:', err);
     }
   };
+
+  const handleUpdateTask = async (id: number, taskData: TaskFormData) => {
+  try {
+    setError(null);
+    const updatedTask = await taskService.updateTask(id, taskData);
+    setTasks(prev => prev.map(task => 
+      task.id === id ? updatedTask : task
+    ));
+    setEditingTask(null);
+  } catch (err) {
+    setError('Erro ao atualizar tarefa');
+    console.error('Error updating task:', err);
+  }
+};
 
   const handleEditTask = (task: Task) => {
     setEditingTask(task);
@@ -128,28 +134,22 @@ const App: React.FC = () => {
     );
   }
 
-  return (
+return (
     <div className="app">
       <div className="container">
-        <header className="app-header">
-          <h1>Gerenciador de Tarefas</h1>
-          <p>Organize suas tarefas de forma simples e eficiente</p>
-        </header>
-
-        {error && (
-          <div className="error-message">
-            {error}
-            <button onClick={() => setError(null)} className="close-error">×</button>
-          </div>
-        )}
+        {/* ... header e error message ... */}
 
         <main className="app-main">
           <div className="task-form-section">
             <TaskForm
-              onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
-              editingTask={editingTask}
-              onCancelEdit={handleCancelEdit}
-            />
+            onSubmit={editingTask ? (taskData) => {
+              if (editingTask.id) {   // Para edição, você precisa definir como vai atualizar
+               handleUpdateTask(editingTask.id, taskData);
+              }
+            } : handleCreateTask}
+            editingTask={editingTask}
+            onCancelEdit={handleCancelEdit}
+  />
           </div>
 
           <div className="task-list-section">
@@ -166,14 +166,16 @@ const App: React.FC = () => {
               onEditTask={handleEditTask}
               onDeleteTask={handleDeleteTask}
               onToggleComplete={handleToggleComplete}
+              onUpdateStatus={handleUpdateStatus}
             />
           </div>
         </main>
 
         <footer className="app-footer">
           <p>Total: {tasks.length} tarefas | 
-            Concluídas: {tasks.filter(t => t.completed).length} | 
-            Pendentes: {tasks.filter(t => !t.completed).length}
+            Pendentes: {tasks.filter(t => t.status === 'pendente').length} | 
+            Em Progresso: {tasks.filter(t => t.status === 'prosseguindo').length} |
+            Concluídas: {tasks.filter(t => t.status === 'concluido').length}
           </p>
         </footer>
       </div>
