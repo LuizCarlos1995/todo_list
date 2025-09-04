@@ -89,9 +89,9 @@ const App: React.FC = () => {
       const task = tasks.find(t => t.id === id);
       if (!task) return;
 
-      const updatedTask = await taskService.updateTask(id, {
-        completed: !task.completed
-      });
+      // Correção de stats concluindo e não concluido
+      const newStatus = task.status === 'concluido' ? 'pendente' : 'concluido';
+      const updatedTask = await taskService.updateTask(id, { status: newStatus });
       
       setTasks(prev => prev.map(t => 
         t.id === id ? updatedTask : t
@@ -174,7 +174,7 @@ return (
         <footer className="app-footer">
           <p>Total: {tasks.length} tarefas | 
             Pendentes: {tasks.filter(t => t.status === 'pendente').length} | 
-            Em Progresso: {tasks.filter(t => t.status === 'prosseguindo').length} |
+            Prosseguindo: {tasks.filter(t => t.status === 'prosseguindo').length} |
             Concluídas: {tasks.filter(t => t.status === 'concluido').length}
           </p>
         </footer>

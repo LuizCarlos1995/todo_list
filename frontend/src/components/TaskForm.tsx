@@ -13,6 +13,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, editingTask, onCancelEdit
     descricao: editingTask?.descricao || ''
   });
 
+  // ✅ Corrigindo: sempre que "editingTask" mudar, atualiza o formData
+React.useEffect(() => {
+  if (editingTask) {
+    setFormData({
+      titulo: editingTask.titulo,
+      descricao: editingTask.descricao || ''
+    });
+  } else {
+    setFormData({ titulo: '', descricao: '' });
+  }
+}, [editingTask]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.titulo.trim()) {
