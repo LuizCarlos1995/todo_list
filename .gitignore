@@ -33,3 +33,6 @@ Thumbs.db
 # Banco de dados (se houver)
 *.sqlite
 *.db
+
+#pasta github
+*.github

@@ -4,12 +4,11 @@ import type { TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } f
 
 // Buscar todas as tarefas
 export const getAllTarefas = async (
-  req: Request<{}, any, any, TarefaQuery>,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { status } = req.query;
-    const tarefas = await tarefaService.findAllTarefas({ status });
+    const tarefas = await tarefaService.findAllTarefas({});
     res.json(tarefas);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -50,27 +49,6 @@ export const createTarefa = async (
   }
 };
 
-// Atualizar tarefa
-export const updateTarefa = async (
-  req: Request<{ id: string }, any, UpdateTarefaDto>,
-  res: Response
-): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const tarefaData = req.body;
-    const atualizada = await tarefaService.updateTarefa(id, tarefaData);
-    
-    if (!atualizada) {
-      res.status(404).json({ message: "Tarefa não encontrada" });
-      return;
-    }
-    
-    res.json({ message: "Tarefa atualizada com sucesso" });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Deletar tarefa
 export const deleteTarefa = async (
   req: Request<{ id: string }>,
@@ -91,6 +69,27 @@ export const deleteTarefa = async (
   }
 };
 
+// Atualizar tarefa
+export const updateTarefa = async (
+  req: Request<{ id: string }, any, UpdateTarefaDto>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const tarefaData = req.body;
+    const tarefaAtualizada = await tarefaService.updateTarefa(id, tarefaData);
+
+    if (!tarefaAtualizada) {
+      res.status(404).json({ message: "Tarefa não encontrada" });
+      return;
+    }
+
+    res.json(tarefaAtualizada);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Atualizar status da tarefa
 export const updateTarefaStatus = async (
   req: Request<{ id: string }, any, UpdateStatusDto>,
@@ -99,14 +98,14 @@ export const updateTarefaStatus = async (
   try {
     const { id } = req.params;
     const statusData = req.body;
-    const atualizada = await tarefaService.updateTarefaStatus(id, statusData);
+    const tarefaAtualizada = await tarefaService.updateTarefaStatus(id, statusData);
     
-    if (!atualizada) {
+    if (!tarefaAtualizada) {
       res.status(404).json({ message: "Tarefa não encontrada" });
       return;
     }
     
-    res.json({ message: "Status da tarefa atualizado com sucesso" });
+    res.json(tarefaAtualizada);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

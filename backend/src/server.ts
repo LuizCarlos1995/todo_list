@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rotas da API
-app.use("/api/tasks", taskRoutes);
+app.use("/api", taskRoutes);
 
 // Importação condicional do Swagger (só se os módulos existirem)
 try {

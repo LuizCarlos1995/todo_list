@@ -15,12 +15,13 @@ export interface TarefaQuery {
 export interface CreateTarefaDto {
   titulo: string;
   descricao: string;
+  status: "pendente" | "prosseguindo" | "concluido";
 }
 
 // Interface para atualização de tarefa (campos opcionais)
 export interface UpdateTarefaDto {
-  titulo?: string;
-  descricao?: string;
+  titulo: string;
+  descricao: string;
   status?: "pendente" | "prosseguindo" | "concluido";
 }
 

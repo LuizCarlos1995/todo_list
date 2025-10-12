@@ -330,6 +330,156 @@ body {
     animation: spin 1s linear infinite;
 }
 
+/* ===== ESTILO BASE DO SELECT ===== */
+.status-select {
+    padding: 8px 12px;
+    /* Espaçamento interno (vertical horizontal) */
+    border: 2px solid #e0e0e0;
+    /* Borda de 2px cinza clara */
+    border-radius: 6px;
+    /* Arredonda os cantos */
+    font-size: 14px;
+    /* Tamanho da fonte */
+    cursor: pointer;
+    /* Muda o cursor para "mãozinha" ao passar o mouse */
+    transition: all 0.3s ease;
+    /* Anima todas as mudanças de estilo em 0.3 segundos */
+    font-weight: 600;
+    /* Deixa o texto em negrito */
+}
+
+/* Efeito ao passar o mouse sobre o select */
+.status-select:hover {
+    border-color: #007bff;
+    /* Muda a cor da borda para azul */
+    transform: translateY(-1px);
+    /* Move o elemento 1px para cima */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Adiciona uma sombra suave */
+}
+
+/* ===== CORES DO SELECT CONFORME O STATUS ATUAL ===== */
+
+/* Quando o status for PENDENTE */
+.status-select.select-pendente {
+    background-color: #f7d360;
+    /* Fundo amarelo */
+    color: #ffffff;
+    /* Texto marrom escuro */
+    border-color: #f7d360;
+    /* Borda amarela igual ao fundo */
+}
+
+/* Quando o status for PROSSEGUINDO */
+.status-select.select-prosseguindo {
+    background-color: #84b3fa;
+    /* Fundo azul claro */
+    color: #ffffff;
+    /* Texto azul escuro */
+    border-color: #84b3fa;
+    /* Borda azul igual ao fundo */
+}
+
+/* Quando o status for CONCLUÍDO */
+.status-select.select-concluido {
+    background-color: #4ec08d;
+    /* Fundo verde claro */
+    color: #ffffff;
+    /* Texto verde escuro */
+    border-color: #4ec08d;
+    /* Borda verde igual ao fundo */
+}
+
+/* ===== HOVER ESPECÍFICO PARA CADA STATUS ===== */
+
+/* Hover quando status é PENDENTE - escurece um pouco */
+.status-select.select-pendente:hover {
+    background-color: #f5c842;
+    /* Amarelo mais escuro */
+    border-color: #f5c842;
+}
+
+/* Hover quando status é PROSSEGUINDO - escurece um pouco */
+.status-select.select-prosseguindo:hover {
+    background-color: #6ba3f8;
+    /* Azul mais escuro */
+    border-color: #6ba3f8;
+}
+
+/* Hover quando status é CONCLUÍDO - escurece um pouco */
+.status-select.select-concluido:hover {
+    background-color: #4ec08d;
+    /* Verde mais escuro */
+    border-color: #4ec08d;
+}
+
+/* ===== ESTILO DAS OPÇÕES DO DROPDOWN (quando abre) ===== */
+
+/* Estiliza TODAS as opções dentro do select */
+.status-select option {
+    background-color: white;
+    /* Fundo branco para todas as opções */
+    color: #333;
+    /* Texto cinza escuro */
+    padding: 10px;
+    /* Espaçamento interno */
+    font-weight: 500;
+    /* Peso da fonte médio */
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Efeito ao passar o mouse sobre cada opção (funciona em alguns navegadores) */
+.status-select option:hover {
+    background-color: #f0f0f0;
+    /* Fundo cinza claro ao passar o mouse */
+}
+
+/* Opção quando está selecionada/marcada no dropdown */
+.status-select option:checked {
+    background-color: #007bff;
+    /* Fundo azul */
+    color: white;
+    /* Texto branco */
+}
+
+/* ===== ESTILOS DOS BADGES DE STATUS (aqueles círculos coloridos) ===== */
+
+.task-status {
+    padding: 4px 12px;
+    /* Espaçamento interno menor que o select */
+    border-radius: 12px;
+    /* Cantos bem arredondados (formato de pílula) */
+    font-size: 12px;
+    /* Fonte menor */
+    font-weight: 600;
+    /* Negrito */
+}
+
+/* Badge PENDENTE */
+.task-status.status-pendente {
+    background-color: #f7d360;
+    /* Amarelo */
+    color: #856404;
+    /* Marrom */
+}
+
+/* Badge PROSSEGUINDO */
+.task-status.status-prosseguindo {
+    background-color: #84b3fa;
+    /* Azul claro */
+    color: #084298;
+    /* Azul escuro */
+}
+
+/* Badge CONCLUÍDO */
+.task-status.status-concluido {
+    background-color: #4ec08d;
+    /* Verde claro */
+    color: #0f5132;
+    /* Verde escuro */
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

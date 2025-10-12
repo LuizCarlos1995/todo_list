@@ -24,7 +24,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({ currentFilter, onFilterCh
         onClick={() => onFilterChange('prosseguindo')}
         className={`btn ${currentFilter === 'prosseguindo' ? 'btn-active' : 'btn-outline'}`}
       >
-        Em Progresso
+        Prosseguindo
       </button>
       <button
         onClick={() => onFilterChange('concluido')}

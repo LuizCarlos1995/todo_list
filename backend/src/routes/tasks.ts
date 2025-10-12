@@ -4,9 +4,9 @@ import * as taskController from "../controllers/taskController";
 const router = express.Router();
 
 // Rotas para tarefas
-router.get("/", taskController.getAllTarefas);
+router.get("/tarefas", taskController.getAllTarefas);
 /* 
-  #swagger.tags = ['Tasks']
+  #swagger.tags = ['tarefas']
   #swagger.description = 'Buscar todas as tarefas'
   #swagger.responses[200] = {
     description: 'Lista de tarefas retornada com sucesso',
@@ -34,7 +34,7 @@ router.get("/:id", taskController.getTarefaById);
     description: 'Tarefa não encontrada'
   }
 */
-router.post("/", taskController.createTarefa);
+router.post("/tarefa/create", taskController.createTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Criar nova tarefa'
@@ -49,7 +49,7 @@ router.post("/", taskController.createTarefa);
     schema: { $ref: '#/definitions/Task' }
   }
 */
-router.put("/:id", taskController.updateTarefa);
+router.put("/update/:id", taskController.updateTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Atualizar tarefa completa'
@@ -66,7 +66,7 @@ router.put("/:id", taskController.updateTarefa);
     schema: { $ref: '#/definitions/Task' }
   }
 */
-router.delete("/:id", taskController.deleteTarefa);
+router.delete("/delete/:id", taskController.deleteTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Deletar tarefa'

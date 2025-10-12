@@ -7,6 +7,7 @@ import { taskService } from './services/api';
 import { Task, TaskFormData } from './types/Task';
 import './styles/App.css';
 
+//Declaração de estado de dados e condições da tela.
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
@@ -15,19 +16,22 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  //carregamento inicial para busca tarefas na API
   useEffect(() => {
     loadTasks();
   }, []);
 
+  //Sempre que as tarefas mudam atualizar o filtro
   useEffect(() => {
     filterTasks();
   }, [tasks, filter]);
 
+  //Função que busca e atualizar as tarefas na API
   const loadTasks = async () => {
     try {
       setLoading(true);
       setError(null);
-      const tasksData = await taskService.getTasks();
+      const tasksData = await taskService.getAllTarefas();
       setTasks(tasksData);
     } catch (err) {
       setError('Erro ao carregar tarefas');
@@ -37,20 +41,22 @@ const App: React.FC = () => {
     }
   };
 
-  const filterTasks = () => {
+  //filtra as tarefas conforme o filtro ativo
+  function filterTasks() {
     let filtered = tasks;
-    
+
     if (filter !== 'all') {
       filtered = tasks.filter(task => task.status === filter);
     }
-    
-    setFilteredTasks(filtered);
-  };
 
+    setFilteredTasks(filtered);
+  }
+
+  //função que cria nova tarefa
   const handleCreateTask = async (taskData: TaskFormData) => {
     try {
       setError(null);
-      const newTask = await taskService.createTask(taskData);
+      const newTask = await taskService.createTarefa(taskData);
       setTasks(prev => [...prev, newTask]);
     } catch (err) {
       setError('Erro ao criar tarefa');
@@ -58,10 +64,12 @@ const App: React.FC = () => {
     }
   };
 
+  //função que atualizar o status da tarefa
   const handleUpdateStatus = async (id: number, status: Task['status']) => {
     try {
       setError(null);
-      const updatedTask = await taskService.updateTask(id, { status });
+      //USAR updateTarefaStatus ao invés de updateTarefa
+      const updatedTask = await taskService.updateTarefaStatus(id, status);
       
       setTasks(prev => prev.map(task => 
         task.id === id ? updatedTask : task
@@ -72,10 +80,11 @@ const App: React.FC = () => {
     }
   };
 
+  //função que deleta a tarefa
   const handleDeleteTask = async (id: number) => {
     try {
       setError(null);
-      await taskService.deleteTask(id);
+      await taskService.deleteTarefa(id);
       setTasks(prev => prev.filter(task => task.id !== id));
     } catch (err) {
       setError('Erro ao excluir tarefa');
@@ -83,39 +92,22 @@ const App: React.FC = () => {
     }
   };
 
-  const handleToggleComplete = async (id: number) => {
-    try {
-      setError(null);
-      const task = tasks.find(t => t.id === id);
-      if (!task) return;
-
-      // Correção de stats concluindo e não concluido
-      const newStatus = task.status === 'concluido' ? 'pendente' : 'concluido';
-      const updatedTask = await taskService.updateTask(id, { status: newStatus });
-      
-      setTasks(prev => prev.map(t => 
-        t.id === id ? updatedTask : t
-      ));
-    } catch (err) {
-      setError('Erro ao atualizar status da tarefa');
-      console.error('Error toggling task completion:', err);
-    }
-  };
-
+  //função que edita o conteudo da tarefa.
   const handleUpdateTask = async (id: number, taskData: TaskFormData) => {
   try {
     setError(null);
-    const updatedTask = await taskService.updateTask(id, taskData);
+    const updatedTask = await taskService.updateTarefa(id, taskData);
     setTasks(prev => prev.map(task => 
       task.id === id ? updatedTask : task
     ));
     setEditingTask(null);
   } catch (err) {
     setError('Erro ao atualizar tarefa');
-    console.error('Error updating task:', err);
+    console.error('Erro ao atualizar tarefa:', err);
   }
 };
 
+//controla o modo de edição, quando clica no editar
   const handleEditTask = (task: Task) => {
     setEditingTask(task);
   };
@@ -137,13 +129,15 @@ const App: React.FC = () => {
 return (
     <div className="app">
       <div className="container">
-        {/* ... header e error message ... */}
-
+        <header className="app-header">
+          <h1>Gerenciador de Tarefas</h1>
+          
+        </header>
         <main className="app-main">
           <div className="task-form-section">
             <TaskForm
             onSubmit={editingTask ? (taskData) => {
-              if (editingTask.id) {   // Para edição, você precisa definir como vai atualizar
+              if (editingTask.id) {
                handleUpdateTask(editingTask.id, taskData);
               }
             } : handleCreateTask}
@@ -165,7 +159,6 @@ return (
               tasks={filteredTasks}
               onEditTask={handleEditTask}
               onDeleteTask={handleDeleteTask}
-              onToggleComplete={handleToggleComplete}
               onUpdateStatus={handleUpdateStatus}
             />
           </div>

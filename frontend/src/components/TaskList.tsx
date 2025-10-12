@@ -6,15 +6,13 @@ interface TaskListProps {
   tasks: Task[];
   onEditTask: (task: Task) => void;
   onDeleteTask: (id: number) => void;
-  onToggleComplete: (id: number) => void;
-  onUpdateStatus: (id: number, status: Task['status']) => void;
+  onUpdateStatus: (id: number, status: 'pendente' | 'prosseguindo' | 'concluido') => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ 
   tasks, 
   onEditTask, 
   onDeleteTask, 
-  onToggleComplete,
   onUpdateStatus 
 }) => {
   if (tasks.length === 0) {
@@ -33,7 +31,6 @@ const TaskList: React.FC<TaskListProps> = ({
           task={task}
           onEdit={onEditTask}
           onDelete={onDeleteTask}
-          onToggleComplete={onToggleComplete}
           onUpdateStatus={onUpdateStatus}
         />
       ))}

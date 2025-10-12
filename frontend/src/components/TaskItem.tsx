@@ -5,11 +5,23 @@ interface TaskItemProps {
   task: Task;
   onEdit: (task: Task) => void;
   onDelete: (id: number) => void;
-  onToggleComplete: (id: number) => void;
-  onUpdateStatus: (id: number, status: Task['status']) => void;
+  onUpdateStatus: (id: number, status: 'pendente' | 'prosseguindo' | 'concluido') => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onToggleComplete }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onUpdateStatus }) => {
+   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onUpdateStatus(task.id!, e.target.value as 'pendente' | 'prosseguindo' | 'concluido');
+  };
+
+  const getStatusLabel = (status: string) => {
+    const labels = {
+      'pendente': 'Pendente',
+      'prosseguindo': 'prosseguindo',
+      'concluido': 'Concluída'
+    };
+    return labels[status as keyof typeof labels] || status;
+  };
+
   return (
     <div className={`task-item ${task.status === 'concluido' ? 'concluido' : ''}`}>
       <div className="task-content">
@@ -18,8 +30,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onToggleCom
           <p className="task-descricao">{task.descricao}</p>
         )}
         <div className="task-meta">
-          <span className={`task-status ${task.status === 'concluido' ? 'concluido' : 'pending'}`}>
-            {task.status === 'concluido' ? 'Concluída' : 'Pendente'}
+          <span className={`task-status status-${task.status}`}>
+            {getStatusLabel(task.status)}
           </span>
           <span className="task-date">
             {new Date(task.created_at!).toLocaleDateString('pt-BR')}
@@ -27,13 +39,16 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onToggleCom
         </div>
       </div>
       
-      <div className="task-actions">
-        <button
-          onClick={() => onToggleComplete(task.id!)}
-          className={`btn ${task.status === 'concluido' ? 'btn-warning' : 'btn-success'}`}
+      <div className="task-actions">      
+        <select 
+          value={task.status} 
+          onChange={handleStatusChange}
+          className={`status-select select-${task.status}`}
         >
-          {task.status === 'concluido' ? 'Desfazer' : 'Concluir'}
-        </button>
+          <option value="pendente">📋 Pendente</option>
+          <option value="prosseguindo">⚙️ prosseguindo</option>
+          <option value="concluido">✅ Concluída</option>
+        </select>
         
         <button
           onClick={() => onEdit(task)}

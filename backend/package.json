@@ -2,11 +2,10 @@
   "name": "todo-backend",
   "version": "1.0.0",
   "description": "Backend para aplicação de gerenciamento de tarefas",
-  "main": "server.ts",
-  
+  "main": "src/server.ts",
   "scripts": {
-    "start": "node server.js",
-    "dev": "npm run swagger && nodemon server.ts",
+    "start": "ts-node src/server.ts",
+    "dev": "npm run swagger && nodemon --exec ts-node src/server.ts",
     "swagger": "node swagger-generate.js",
     "dev:watch": "nodemon server.ts"
   },
@@ -25,6 +24,6 @@
     "@types/node": "^24.3.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }
