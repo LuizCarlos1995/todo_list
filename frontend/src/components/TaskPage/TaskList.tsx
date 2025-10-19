@@ -1,6 +1,6 @@
 import React from 'react';
 import TaskItem from './TaskItem';
-import { Task } from '../types/Task';
+import { Task } from '../../types/TaskInterface';
 
 interface TaskListProps {
   tasks: Task[];

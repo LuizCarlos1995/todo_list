@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TaskFormData } from '../types/Task';
+import { TaskFormData } from '../../types/TaskInterface';
 
 interface TaskFormProps {
   onSubmit: (taskData: TaskFormData) => void;
