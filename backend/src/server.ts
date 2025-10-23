@@ -27,7 +27,7 @@ try {
   console.log('Swagger não configurado:');
 }
 
-// Testar conexão com o banco
+// Testar conexão com o banco mysql
 db.connect((err: any) => {
   if (err) {
     console.error("Erro ao conectar ao MySQL:", err);
