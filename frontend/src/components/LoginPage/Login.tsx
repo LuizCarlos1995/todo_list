@@ -34,8 +34,8 @@ const Login: React.FC = () => {
       setError(null);
       
       const credentials = { email, password };
-      // ajusta rota no backend
-      // const response = await LoginService.fazerLogin(credentials);
+      const response = await LoginService.fazerLogin(credentials);
+      console.log('dados vindos do backend', response);
       
       navigate("/tasks");
     } catch (err: any) {

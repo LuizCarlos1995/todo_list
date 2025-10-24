@@ -3,17 +3,21 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import db from "./config/database";
-import taskRoutes from "./routes/tasks";
+import userRoutes from "./routes/userRouter"
+import taskRoutes from "./routes/tasksRouter";
+import loginRoutes from "./routes/loginRouter";
 
 const app = express();
-const PORT: number = parseInt(process.env.PORT || "5000");
+const PORT: number = parseInt(process.env.PORT || '');
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000'}));
 app.use(express.json());
 
 // Rotas da API
+app.use("/api", userRoutes);
 app.use("/api", taskRoutes);
+app.use("/api", loginRoutes);
 
 // Importação condicional do Swagger (só se os módulos existirem)
 try {
@@ -36,6 +40,7 @@ db.connect((err: any) => {
   console.log("Conectado ao MySQL");
 });
 
+// Testar conexão com o sevidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,5 +1,5 @@
 import db from "../config/database";
-import type { Tarefa, TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/interfaces";
+import type { Tarefa, TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/taskInterfaces";
 
 // Buscar todas as tarefas com filtro opcional
 export const findAllTarefas = (filters: TarefaQuery): Promise<Tarefa[]> => {

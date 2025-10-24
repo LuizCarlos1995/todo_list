@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as tarefaService from "../services/taskService";
-import type { TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/interfaces";
+import type { TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/taskInterfaces";
 
 // Buscar todas as tarefas
 export const getAllTarefas = async (
