@@ -5,7 +5,7 @@ import FilterButtons from './FilterButtons';
 import LoadingSpinner from './LoadingSpinner';
 import { taskService } from '../../services/TaskService';
 import { Task, TaskFormData } from '../../types/TaskInterface';
-import '../../styles/App.css';
+import './Task.css';
 
 //Declaração de estado de dados e condições da tela.
 const App: React.FC = () => {

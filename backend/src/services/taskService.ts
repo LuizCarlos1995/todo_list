@@ -87,10 +87,10 @@ export const deleteTarefa = (id: string): Promise<boolean> => {
 // Atualizar tarefa completa e retornar a tarefa atualizada
 export const updateTarefa = (id: string, tarefaData: UpdateTarefaDto): Promise<Tarefa | null> => {
   return new Promise((resolve, reject) => {
-    const { titulo, descricao, status } = tarefaData;
+    const { titulo, descricao, } = tarefaData; //status } = tarefaData;
 
     db.query(
-      "UPDATE tarefas SET titulo = ?, descricao = ?, WHERE id = ?",
+      "UPDATE tarefas SET titulo = ?, descricao = ? WHERE id = ?",
       [titulo, descricao, id],
       (err: any, results: any) => {
         if (err) {
@@ -119,6 +119,7 @@ export const updateTarefa = (id: string, tarefaData: UpdateTarefaDto): Promise<T
     );
   });
 };
+
 
 // Atualizar apenas o status da tarefa e retornar a tarefa atualizada
 export const updateTarefaStatus = (id: string, statusData: UpdateStatusDto): Promise<Tarefa | null> => {

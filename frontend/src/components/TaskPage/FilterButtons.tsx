@@ -1,4 +1,5 @@
 import React from 'react';
+import './Task.css';
 
 interface FilterButtonsProps {
   currentFilter: 'all' | 'pendente' | 'prosseguindo' | 'concluido';

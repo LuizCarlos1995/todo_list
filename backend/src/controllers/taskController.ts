@@ -77,6 +77,7 @@ export const updateTarefa = async (
   try {
     const { id } = req.params;
     const tarefaData = req.body;
+    
     const tarefaAtualizada = await tarefaService.updateTarefa(id, tarefaData);
 
     if (!tarefaAtualizada) {

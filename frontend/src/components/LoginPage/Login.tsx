@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { LoginService } from '../../services/LoginService';
 import { useNavigate } from "react-router-dom";
+import  ModalCadastrar from './ModalCadastrar.tsx'
+import "./Login.css"
 
 
 const Login: React.FC = () => {
@@ -8,6 +10,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const validate = () => {
@@ -34,8 +37,7 @@ const Login: React.FC = () => {
       setError(null);
       
       const credentials = { email, password };
-      const response = await LoginService.fazerLogin(credentials);
-      console.log('dados vindos do backend', response);
+      await LoginService.fazerLogin(credentials);
       
       navigate("/tasks");
     } catch (err: any) {
@@ -48,7 +50,7 @@ const Login: React.FC = () => {
 
   return (
     <div className={`login-container`}>
-      <form className="task-form" onSubmit={handleSubmit} aria-label="form-login">
+      <form className="login-form" onSubmit={(e) => e.preventDefault()} aria-label="form-login">
         <h3>Entrar</h3>
 
         {error && (
@@ -57,7 +59,7 @@ const Login: React.FC = () => {
           </div>
         )}
 
-        <div className="form-group">
+        <div className="login-form-group">
           <input
             type="email"
             name="email"
@@ -70,7 +72,7 @@ const Login: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="login-form-group">
           <input
             type="password"
             name="password"
@@ -83,8 +85,8 @@ const Login: React.FC = () => {
           />
         </div>
 
-        <div className="form-actions">
-          <button type="submit" className="btn btn-primary" disabled={loading}>
+        <div className="login-form-entrar">
+          <button type="submit" className="btn btn-entrar" disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </div>
@@ -92,7 +94,16 @@ const Login: React.FC = () => {
         <div style={{ marginTop: 12, textAlign: 'center' }}>
           <small style={{ color: '#6c757d' }}>Ainda não tem conta? Cadastre-se no painel.</small>
         </div>
+
+        <div className="form-cadastra">
+          <button type="button" className="btn btn-cadastrar" disabled={loading}
+            onClick={() => setShowModal(true)}>
+            {loading ? 'Entrando...' : 'Cadastra-se'}
+          </button>
+        </div>
       </form>
+      {/* Render do Modal */}
+      <ModalCadastrar isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

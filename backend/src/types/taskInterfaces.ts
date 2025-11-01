@@ -22,7 +22,6 @@ export interface CreateTarefaDto {
 export interface UpdateTarefaDto {
   titulo: string;
   descricao: string;
-  status?: "pendente" | "prosseguindo" | "concluido";
 }
 
 // Interface para atualização apenas do status
