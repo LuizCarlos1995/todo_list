@@ -13,6 +13,7 @@ const ModalCadastrar: React.FC<ModalCadastrarProps> = ({ isOpen, onClose }) => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     if (!isOpen) return null; // Se o modal não estiver aberto, não renderiza nada
 
@@ -50,7 +51,7 @@ const ModalCadastrar: React.FC<ModalCadastrarProps> = ({ isOpen, onClose }) => {
 
                 <form onSubmit={handleCadastrar}>
                     <div className="form-group">
-                        <input
+                        <input className="modal-input"
                             type="text"
                             placeholder="Nome"
                             value={name}
@@ -60,7 +61,7 @@ const ModalCadastrar: React.FC<ModalCadastrarProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="form-group">
-                        <input
+                        <input className="modal-input"
                             type="email"
                             placeholder="E-mail"
                             value={email}
@@ -69,14 +70,21 @@ const ModalCadastrar: React.FC<ModalCadastrarProps> = ({ isOpen, onClose }) => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <input
-                            type="password"
+                    <div className="password-wrapper">
+                        <input className="modal-input"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Senha"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        <button
+                            type="button"
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? "🙈" : "👁️"}
+                        </button>
                     </div>
 
                     <div className="modal-actions">

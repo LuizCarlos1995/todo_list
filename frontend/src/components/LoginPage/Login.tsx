@@ -86,7 +86,8 @@ const Login: React.FC = () => {
         </div>
 
         <div className="login-form-entrar">
-          <button type="submit" className="btn btn-entrar" disabled={loading}>
+          <button type="submit" className="btn btn-entrar" disabled={loading}
+            onClick={handleSubmit}>
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </div>
