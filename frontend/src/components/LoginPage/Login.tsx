@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LoginService } from '../../services/LoginService';
 import { useNavigate } from "react-router-dom";
-import  ModalCadastrar from './ModalCadastrar.tsx'
+import ModalCadastrar from './ModalCadastrar.tsx'
 import "./Login.css"
 
 
@@ -11,6 +11,8 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const validate = () => {
@@ -35,10 +37,10 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const credentials = { email, password };
       await LoginService.fazerLogin(credentials);
-      
+
       navigate("/tasks");
     } catch (err: any) {
       console.error('Login error:', err);
@@ -73,16 +75,22 @@ const Login: React.FC = () => {
         </div>
 
         <div className="login-form-group">
-          <input
-            type="password"
+          <input className="form-input"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="form-input"
             required
             autoComplete="current-password"
           />
+          <button
+            type="button"
+            className="toggle-password"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
         </div>
 
         <div className="login-form-entrar">

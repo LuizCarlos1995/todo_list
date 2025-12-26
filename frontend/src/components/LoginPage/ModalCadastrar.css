@@ -44,12 +44,12 @@
 
 /* ===== INPUTS DO MODAL ===== */
 .modal-input {
-    width: 100%;                     /* Ocupa toda a largura do formulário */
-    padding: 0.75rem 0.9rem;         /* Espaçamento interno (altura do input) */
-    font-size: 1rem;                 /* Tamanho da fonte */
-    border: 1px solid #ccc;          /* Borda padrão */
-    border-radius: 6px;              /* Cantos arredondados */
-    transition: all 0.25s ease;      /* Animação suave ao focar */
+    width: 100%;                /* Ocupa toda a largura do formulário */
+    padding: 0.75rem 0.9rem;    /* Espaçamento interno (altura do input) */
+    font-size: 1rem;            /* Tamanho da fonte */
+    border: 1px solid #ccc;   /* Borda padrão */
+    border-radius: 6px;         /* Cantos arredondados */
+    transition: all 0.25s ease; /* Animação suave ao focar */
     background-color: #fff;
     color: #333;
 }

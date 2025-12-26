@@ -36,18 +36,43 @@
 }
 
 /* ======= CAMPOS ======= */
-.login-form-group input {
+.login-form-group {
+    position: relative;
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
+}
+
+.form-input {
+    width: 100%;                     /* Ocupa toda a largura do formulário */
+    padding: 0.75rem 0.9rem;         /* Espaçamento interno (altura do input) */
+    font-size: 1rem;                 /* Tamanho da fonte */
+    border: 1px solid #ccc;          /* Borda padrão */
+    border-radius: 6px;              /* Cantos arredondados */
+    transition: all 0.25s ease;      /* Animação suave ao focar */
+    background-color: #fff;
+    color: #333;
 }
 
 .login-form-group input:focus {
     border-color: #4facfe;
     outline: none;
     box-shadow: 0 0 4px rgba(79, 172, 254, 0.6);
+}
+
+/* Botão de mostrar/esconder */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.toggle-password:hover {
+  color: #4facfe;
 }
 
 /* ======= BOTÕES ======= */
