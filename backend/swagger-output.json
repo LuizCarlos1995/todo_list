@@ -23,7 +23,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/user": {
+    "/api/users": {
       "post": {
         "description": "",
         "responses": {

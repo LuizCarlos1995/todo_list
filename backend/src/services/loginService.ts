@@ -2,9 +2,7 @@ import db from "../config/database";
 import jwt from "jsonwebtoken";
 import { User } from "../types/userInterface";
 
-const JWT_SECRET = "SUA_CHAVE_SECRETA"; // coloque em .env depois
-
-export const verifyUser = (email: string, password: string): Promise<{ token: string, data: User }> => {
+export const verifyUser = (email: string, password: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM users WHERE email = ?";
 
@@ -21,6 +19,11 @@ export const verifyUser = (email: string, password: string): Promise<{ token: st
 
             const user = results[0];
 
+            if (!user) {
+                reject(new Error("Usuário não encontrado"));
+                return;
+            }
+
             // Aqui você deve usar bcrypt.compare em vez de comparar direto:
             if (user.password !== password) {
                 reject(new Error("Senha incorreta"));
@@ -30,11 +33,18 @@ export const verifyUser = (email: string, password: string): Promise<{ token: st
             // Cria um token JWT
             const token = jwt.sign(
                 { id: user.id, email: user.email },
-                JWT_SECRET,
+                process.env.JWT_SECRET as string,
                 { expiresIn: "2h" }
             );
 
-            resolve({ token, data: user });
+            resolve({
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                },
+                token,
+            });
         });
     });
 };

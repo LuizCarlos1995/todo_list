@@ -5,3 +5,9 @@ export interface User {
     email: string
     password: string
 }
+
+export interface SafeUser {
+    id: string;
+    name: string;
+    email: string;
+}

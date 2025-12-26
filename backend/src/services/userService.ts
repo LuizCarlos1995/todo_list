@@ -1,8 +1,9 @@
 import { rejects } from "assert";
 import db from "../config/database";
-import { User } from "../types/userInterface";
+import { SafeUser, User } from "../types/userInterface";
+import { ApiResponse } from "../types/erroInterface";
 
-export const createUserService = (userData: User): Promise<User> => {
+export const createUserService = (userData: User): Promise<ApiResponse<SafeUser>> => {
     return new Promise((resolve, reject) => {
         const { id, name, email, password } = userData;
 
@@ -15,10 +16,13 @@ export const createUserService = (userData: User): Promise<User> => {
                     return;
                 }
                 resolve({
-                    id: results.insertId,
-                    name,
-                    email,
-                    password,
+                    success: true,
+                    message: "Usuário criado com sucesso!",
+                    data: {
+                        id: results.insertId,
+                        name,
+                        email,
+                    }
                 })
             }
         )
