@@ -11,6 +11,8 @@ export const LoginService = {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
             }
+            // setar o token novo nas configurações do axios
+            api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
             return response.data;
         } catch (error: any) {
