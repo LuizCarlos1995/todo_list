@@ -2,23 +2,16 @@ import db from "../config/database";
 import type { Tarefa, TarefaQuery, CreateTarefaDto, UpdateTarefaDto, UpdateStatusDto } from "../types/taskInterfaces";
 
 // Buscar todas as tarefas com filtro opcional
-export const findAllTarefas = (filters: TarefaQuery): Promise<Tarefa[]> => {
+export const findAllTarefas = (userId: number): Promise<Tarefa[]> => {
   return new Promise((resolve, reject) => {
-    let query = "SELECT * FROM tarefas";
-
-    if (filters.status) {
-      query += ` WHERE status = '${filters.status}'`;
-    }
-
-    query += " ORDER BY created_at DESC";
-
-    db.query(query, (err: any, results: Tarefa[]) => {
-      if (err) {
-        reject(err);
-        return;
+    db.query(
+      "SELECT * FROM tarefas WHERE user_id = ? ORDER BY created_at DESC",
+      [userId],
+      (err: any, rows: any[]) => {
+        if (err) return reject(err);
+        resolve(rows as Tarefa[]);
       }
-      resolve(results);
-    });
+    );
   });
 };
 
@@ -44,40 +37,39 @@ export const findTarefaById = (id: string): Promise<Tarefa | null> => {
 };
 
 // Criar nova tarefa
-export const createTarefa = (tarefaData: CreateTarefaDto): Promise<Tarefa> => {
+export const createTarefa = (userId: number, data: CreateTarefaDto): Promise<Tarefa> => {
   return new Promise((resolve, reject) => {
-    const { titulo, descricao } = tarefaData;
+    const { titulo, descricao, status = "pendente" } = data;
 
     db.query(
-      "INSERT INTO tarefas (titulo, descricao) VALUES (?, ?)",
-      [titulo, descricao],
-      (err: any, results: any) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve({
-          id: results.insertId,
-          titulo,
-          descricao,
-          status: "pendente"
-        });
+      "INSERT INTO tarefas (titulo, descricao, status, user_id) VALUES (?, ?, ?, ?)",
+      [titulo, descricao, status, userId],
+      (err: any, result: any) => {
+        if (err) return reject(err);
+
+        const insertId = result.insertId;
+
+        db.query(
+          "SELECT * FROM tarefas WHERE id = ? AND user_id = ?",
+          [insertId, userId],
+          (err2: any, rows: any[]) => {
+            if (err2) return reject(err2);
+            resolve(rows[0]);
+          }
+        );
       }
     );
   });
 };
 
 // Deletar tarefa
-export const deleteTarefa = (id: string): Promise<boolean> => {
+export const deleteTarefa = (userId: number, id: string): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     db.query(
-      "DELETE FROM tarefas WHERE id = ?",
-      [id],
+      "DELETE FROM tarefas WHERE id = ? AND user_id = ?",
+      [id, userId],
       (err: any, results: any) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+        if (err) return reject(err);
         resolve(results.affectedRows > 0);
       }
     );
@@ -85,36 +77,33 @@ export const deleteTarefa = (id: string): Promise<boolean> => {
 };
 
 // Atualizar tarefa completa e retornar a tarefa atualizada
-export const updateTarefa = (id: string, tarefaData: UpdateTarefaDto): Promise<Tarefa | null> => {
+export const updateTarefa = (
+  userId: number,
+  id: string,
+  tarefaData: UpdateTarefaDto
+): Promise<Tarefa | null> => {
   return new Promise((resolve, reject) => {
-    const { titulo, descricao, } = tarefaData; //status } = tarefaData;
+    const { titulo, descricao } = tarefaData;
 
     db.query(
-      "UPDATE tarefas SET titulo = ?, descricao = ? WHERE id = ?",
-      [titulo, descricao, id],
+      "UPDATE tarefas SET titulo = ?, descricao = ? WHERE id = ? AND user_id = ?",
+      [titulo, descricao, id, userId],
       (err: any, results: any) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+        if (err) return reject(err);
+
         if (results.affectedRows === 0) {
-          resolve(null);
+          resolve(null); // não existe OU não pertence ao usuário
           return;
         }
 
-        //Após atualizar, buscar e retornar a tarefa atualizada
         db.query(
-          "SELECT * FROM tarefas WHERE id = ?",
-          [id],
+          "SELECT * FROM tarefas WHERE id = ? AND user_id = ?",
+          [id, userId],
           (err2: any, rows: any[]) => {
-            if (err2) {
-              reject(err2);
-              return;
-            }
-
-            resolve(rows[0]); // Retorna a tarefa atualizada
+            if (err2) return reject(err2);
+            resolve(rows[0] || null);
           }
-        ); 
+        );
       }
     );
   });

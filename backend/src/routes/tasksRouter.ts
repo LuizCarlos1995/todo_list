@@ -1,10 +1,11 @@
 import express from "express";
 import * as taskController from "../controllers/taskController";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
 // Rotas para tarefas
-router.get("/tarefas", taskController.getAllTarefas);
+router.get("/tarefas", authMiddleware, taskController.getAllTarefas);
 /* 
   #swagger.tags = ['tarefas']
   #swagger.description = 'Buscar todas as tarefas'
@@ -16,7 +17,7 @@ router.get("/tarefas", taskController.getAllTarefas);
     }
   }
 */
-router.get("/:id", taskController.getTarefaById);
+router.get("/:id", authMiddleware, taskController.getTarefaById);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Buscar tarefa por ID'
@@ -34,7 +35,7 @@ router.get("/:id", taskController.getTarefaById);
     description: 'Tarefa não encontrada'
   }
 */
-router.post("/tarefa/create", taskController.createTarefa);
+router.post("/tarefa/create", authMiddleware, taskController.createTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Criar nova tarefa'
@@ -49,7 +50,7 @@ router.post("/tarefa/create", taskController.createTarefa);
     schema: { $ref: '#/definitions/Task' }
   }
 */
-router.put("/update/:id", taskController.updateTarefa);
+router.put("/update/:id", authMiddleware, taskController.updateTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Atualizar tarefa completa'
@@ -66,7 +67,7 @@ router.put("/update/:id", taskController.updateTarefa);
     schema: { $ref: '#/definitions/Task' }
   }
 */
-router.delete("/delete/:id", taskController.deleteTarefa);
+router.delete("/delete/:id", authMiddleware, taskController.deleteTarefa);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Deletar tarefa'
@@ -80,7 +81,7 @@ router.delete("/delete/:id", taskController.deleteTarefa);
     description: 'Tarefa deletada com sucesso'
   }
 */
-router.patch("/:id/status", taskController.updateTarefaStatus);
+router.patch("/:id/status", authMiddleware, taskController.updateTarefaStatus);
 /* 
   #swagger.tags = ['Tasks']
   #swagger.description = 'Atualizar apenas o status da tarefa'

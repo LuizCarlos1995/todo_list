@@ -4,6 +4,7 @@ export interface Tarefa {
   titulo: string;
   descricao: string;
   status: "pendente" | "prosseguindo" | "concluido";
+  user_id: number;
   created_at?: Date;
 }
 
