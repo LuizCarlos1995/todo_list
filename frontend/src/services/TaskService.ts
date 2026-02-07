@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Task, TaskFormData } from '../types/TaskInterface';
+import type { Task, TaskFormData } from '../types/TaskInterface';
 
 
 export const taskService = {

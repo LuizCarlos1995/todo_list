@@ -1,5 +1,5 @@
 import { api } from "./api";
-import { UserData } from '../types/UserInterface';
+import type { UserData } from '../types/UserInterface';
 
 export const UserService = {
     
@@ -7,9 +7,14 @@ export const UserService = {
         try {
             const response = await api.post("/users", userData);
             return response.data;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Erro ao cadastrar usuário:", error);
-            throw new Error(error.response?.data?.message || "Erro ao cadastrar");
+            
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            }
+
+            throw new Error("Erro ao cadastrar");
         }
     },
 };

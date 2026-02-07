@@ -1,5 +1,5 @@
 import { api } from './api';
-import { LoginCredentials, LoginResponse } from '../types/LoginInterface';
+import type { LoginCredentials, LoginResponse } from '../types/LoginInterface.ts';
 
 export const LoginService = {
 
@@ -15,11 +15,14 @@ export const LoginService = {
             api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
             return response.data;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('erro ao fazer login', error);
-            throw new Error(
-                error.response?.data?.message
-            )
+
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            }
+
+            throw new Error('Erro ao realizar login');
         }
     }
 }
