@@ -1,0 +1,10 @@
+http://taskmanager.com.br:8080 {
+  encode gzip zstd
+
+  # Mantenha ./dist se a pasta gerada pelo build do frontend se chamar "dist"
+  root * ./dist
+  file_server
+
+  @api path /api* /api-docs*
+  reverse_proxy @api localhost:5001
+}

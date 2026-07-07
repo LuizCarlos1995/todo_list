@@ -8,10 +8,14 @@ import taskRoutes from "./routes/tasksRouter";
 import loginRoutes from "./routes/loginRouter";
 
 const app = express();
-const PORT: number = parseInt(process.env.PORT || '');
+const PORT: number = Number(process.env.PORT) || 5001;
+const allowedOrigins = (process.env.ALLOWED_ORIGIN || "http://localhost:3000")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000'}));
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 // Rotas da API

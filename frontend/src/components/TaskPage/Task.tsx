@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import FilterButtons from "./FilterButtons";
@@ -23,10 +23,20 @@ const App: React.FC = () => {
     loadTasks();
   }, []);
 
+  const filterTasks = useCallback(() => {
+    let filtered = tasks;
+
+    if (filter !== "all") {
+      filtered = tasks.filter((task) => task.status === filter);
+    }
+
+    setFilteredTasks(filtered);
+  }, [tasks, filter]);
+
   //Sempre que as tarefas mudam atualizar o filtro
   useEffect(() => {
     filterTasks();
-  }, [tasks, filter]);
+  }, [filterTasks]);
 
   //Função que busca e atualizar as tarefas na API
   const loadTasks = async () => {
@@ -44,15 +54,15 @@ const App: React.FC = () => {
   };
 
   //filtra as tarefas conforme o filtro ativo
-  function filterTasks() {
-    let filtered = tasks;
+  // function filterTasks() {
+  //   let filtered = tasks;
 
-    if (filter !== "all") {
-      filtered = tasks.filter((task) => task.status === filter);
-    }
+  //   if (filter !== "all") {
+  //     filtered = tasks.filter((task) => task.status === filter);
+  //   }
 
-    setFilteredTasks(filtered);
-  }
+  //   setFilteredTasks(filtered);
+  // }
 
   //função que cria nova tarefa
   const handleCreateTask = async (taskData: TaskFormData) => {
@@ -129,20 +139,43 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="app">
-      <div className="container">
-        <header className="app-header">
-          <h1>Gerenciador de Tarefas</h1>
+    <div className="min-h-screen">
+      <div
+        className="
+        max-w-4xl mx-auto
+        bg-white/95 dark:bg-slate-900/90
+        rounded-2xl shadow-xl
+        overflow-hidden
+        border border-slate-200 dark:border-slate-800
+        backdrop-blur
+      "
+      >
+        {/* HEADER */}
+        <header
+          className="
+          bg-gradient-to-r from-sky-400 to-cyan-400
+          dark:from-sky-600 dark:to-cyan-600
+          text-white
+          p-8
+          text-center
+        "
+        >
+          <h1 className="text-3xl md:text-4xl font-bold">
+            Gerenciador de Tarefas
+          </h1>
         </header>
 
-        <main className="app-main">
-          {/* 🔴 BLOCO DE ERRO AQUI */}
+        {/* MAIN */}
+        <main className="p-6 md:p-8">
+          {/* 🔴 BLOCO DE ERRO */}
           {error && (
             <div
-              className="mb-4 rounded-md border px-3 py-2 text-sm
-                       border-red-200 bg-red-50 text-red-700
-                       dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-200
-                       flex items-center justify-between gap-3"
+              className="
+              mb-4 rounded-md border px-3 py-2 text-sm
+              border-red-200 bg-red-50 text-red-700
+              dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-200
+              flex items-center justify-between gap-3
+            "
               role="alert"
             >
               <span>{error}</span>
@@ -150,8 +183,10 @@ const App: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setError(null)}
-                className="rounded-md px-2 py-1 text-xs font-medium
-                         hover:bg-red-100 dark:hover:bg-red-900/30"
+                className="
+                rounded-md px-2 py-1 text-xs font-medium
+                hover:bg-red-100 dark:hover:bg-red-900/30
+              "
                 aria-label="Fechar erro"
               >
                 Fechar
@@ -159,7 +194,8 @@ const App: React.FC = () => {
             </div>
           )}
 
-          <div className="task-form-section">
+          {/* FORM */}
+          <div className="mb-8">
             <TaskForm
               onSubmit={
                 editingTask
@@ -175,9 +211,18 @@ const App: React.FC = () => {
             />
           </div>
 
-          <div className="task-list-section">
-            <div className="section-header">
-              <h2>Suas Tarefas</h2>
+          {/* LISTA */}
+          <div>
+            <div
+              className="
+              flex flex-wrap items-center justify-between
+              gap-4 mb-6
+            "
+            >
+              <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-200">
+                Suas Tarefas
+              </h2>
+
               <FilterButtons
                 currentFilter={filter}
                 onFilterChange={setFilter}
@@ -193,7 +238,17 @@ const App: React.FC = () => {
           </div>
         </main>
 
-        <footer className="app-footer">
+        {/* FOOTER */}
+        <footer
+          className="
+          bg-slate-50 dark:bg-slate-900
+          border-t border-slate-200 dark:border-slate-800
+          text-slate-600 dark:text-slate-300
+          text-sm
+          px-6 py-4
+          text-center
+        "
+        >
           <p>
             Total: {tasks.length} tarefas | Pendentes:{" "}
             {tasks.filter((t) => t.status === "pendente").length} |

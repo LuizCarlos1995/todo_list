@@ -1,4 +1,8 @@
 const swaggerAutogen = require("swagger-autogen")();
+require("dotenv").config();
+
+const swaggerHost = process.env.SWAGGER_HOST || `localhost:${process.env.PORT || 5001}`;
+const swaggerScheme = process.env.SWAGGER_SCHEME || "http";
 
 const doc = {
   info: {
@@ -6,8 +10,8 @@ const doc = {
     description: "Documentação automática da API",
     version: "1.0.0",
   },
-  host: "localhost:5000",
-  schemes: ["http"],
+  host: swaggerHost,
+  schemes: [swaggerScheme],
   consumes: ["application/json"],
   produces: ["application/json"],
   tags: [
